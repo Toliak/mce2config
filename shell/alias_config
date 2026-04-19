@@ -1,0 +1,171 @@
+alias c="clear"
+alias cl="clear"
+alias ckear="clear"
+alias clr="clear"
+alias cls="clear"
+
+alias ssr="ssh -l root"
+
+# alias ip="ip"
+
+# alias ls="ls"
+alias ll="ls -lah"
+
+alias ..="cd .."
+alias ...="cd ../.."
+alias ....="cd ../../.."
+alias .....="cd ../../../.."
+alias ......="cd ../../../../.."
+
+alias cdp="cd -P"
+
+alias du1="du -dh 1"
+
+alias dps="docker ps"
+alias di="docker images"
+
+alias mv='mv -i'
+alias cp='cp -i'
+alias ln='ln -i'
+alias rm='rm -I --preserve-root'
+
+alias ports='sudo netstat -tulanp'
+
+alias psmem="ps auxf | sort -nr -k 4"
+alias psmem10="ps auxf | sort -nr -k 4 | head -10"
+
+alias pscpu="ps auxf | sort -nr -k 3"
+alias pscpu10="ps auxf | sort -nr -k 3 | head -10"
+
+alias paux='ps aux | grep'
+alias usage='du -ch | grep total'
+alias totalusage='df -hl --total | grep total'
+
+alias gitadog='git log --all --decorate --oneline --graph'
+alias search='grep -rn . -ie'
+
+alias sudo='sudo '
+
+function rtrim() {
+    local TEXT
+    TEXT=$(</dev/stdin)
+    echo -n $TEXT
+}
+
+function to-xsel() {
+    local ARG
+    ARG="$1"
+
+    if [ "$ARG" = "-nt" ]; then
+        # No trim
+        xsel -i -b
+    else
+        # Trim
+        rtrim | xsel -i -b
+    fi
+}
+
+function to-xclip() {
+    local ARG
+    ARG="$1"
+
+    if [ "$ARG" = "-nt" ]; then
+        # No trim
+        xclip -i -selection clipboard
+    else
+        # Trim
+        rtrim | xclip -i -selection clipboard
+    fi
+}
+
+alias private-vim="vim -i /tmp/private-viminfo --cmd 'set noswapfile' --cmd 'set nobackup'"
+alias private-zsh="HISTFILE=/tmp/private-zsh-histfile zsh"
+alias private-chromium="chromium --incognito --user-data-dir=/tmp/private-chromium"
+
+alias virsh-sys="virsh --connect qemu:///system"
+alias diff-text="diff --text --recursive"
+
+function search-all() {
+    find . -exec grep -rn {} -ie $@ \;
+}
+
+function k() {
+    printf "Confirm? \e[34m[y/N]\e[0m  "
+
+    local LINE=""
+    read -r LINE
+    LINE=$(echo "$LINE" | tr 'a-z' 'A-Z')
+
+    if [ ! "$LINE" = "Y" ]; then
+        printf "\n\e[31mCancelled\e[0m\n"
+        return 1
+    fi
+    printf "\n\e[32mConfirmed\e[0m\n"
+    "$@"
+}
+
+function sudok() {
+    sudo -K
+    sudo "$@"
+    sudo -K
+}
+
+function mkdircd() {
+    mkdir "$1"
+    cd "$1"
+}
+
+function smkdircd() {
+    sudo mkdir "$1"
+    cd "$1"
+}
+
+function infty() {
+    while true; do
+        $@
+    done
+}
+
+function infty1() {
+    while true; do
+        $@
+        sleep 1
+    done
+}
+
+function genpass() {
+    local LENGTH="$1"
+    if [ "$LENGTH" = "" ]; then
+        LENGTH=32
+    fi
+    local PASSWORD=$( cat /dev/urandom | tr -dc '[:alpha:][:digit:]' | fold -w ${1:-"$LENGTH"} | head -n 1 )
+    echo "$PASSWORD"
+}
+
+function sus() {
+    COLOR=$((30 + $RANDOM % 6))
+
+    printf "\e[${COLOR}m"
+    printf "             sWWWWWWWWWWWWWWss            \n"
+    printf "         sWWWWWWsssssssssssWWWWWWWs       \n"
+    printf "        WWss                 sWWWWss      \n"
+    printf "       sWs       ssWWWWWWWWWWWWWWWWWss    \n"
+    printf "       sWs      sWWWs             sWWWs   \n"
+    printf "  sWWWWWWWs     sWWWs              sWWWs  \n"
+    printf " sWWsssWWWWs    sWWWs              sWWWs  \n"
+    printf " sWW    WWs      sWWWssssssssssssssWWWs   \n"
+    printf " sWW    WWs       sWWWWWWWWWWWWWWWWWWs    \n"
+    printf " sWW    WWs                       sWW     \n"
+    printf " sWW    WWs                       sWs     \n"
+    printf " sWW    WWs     \e[01;31mAre you root?\e[00;${COLOR}m     sWs   \n"
+    printf " sWW    WWs                       sWs     \n"
+    printf " sWW    WWs       ssWWWWWss       sWs     \n"
+    printf "  sssWWWWWs      sWWWWsWWWWs      sWW     \n"
+    printf "        WWs      WWs     sWW      sWW     \n"
+    printf "        WWs      WWs     sWW      sWW     \n"
+    printf "        sWWWsssWWWss     ssWWWsssWWWs     \n"
+    printf "         ssWWWWWsss       sssWWWWWss      \n"
+    printf '\e[0m\n'
+
+    sudo -i $@
+}

@@ -1,6 +1,6 @@
-SCRIPT_DIR="${0:A:h}"
+MCE2_SCRIPT_DIR="${0:A:h}"
 
-source "$SCRIPT_DIR"/shared.sh
+source "$MCE2_SCRIPT_DIR"/shared.sh
 
 # TODO: use SCRIPT_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 # for the source
