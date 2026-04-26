@@ -18,6 +18,7 @@ fzf-patch-history-widget() {
     fi
 }
 zle -N fzf-patch-history-widget
+
 bindkey -M emacs '^R' fzf-patch-history-widget
 bindkey -M vicmd '^R' fzf-patch-history-widget
 bindkey -M viins '^R' fzf-patch-history-widget
