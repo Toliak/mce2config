@@ -14,3 +14,9 @@ if [ "$TERM" = "linux" ]; then
     ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=yellow"
 fi
 # <END> zsh-autosuggestions cfg
+
+# <BEGIN> fzf-history-widget cfg
+if command -v fzf >/dev/null 2>&1; then
+    source "$MCE2_SCRIPT_DIR"/fzf-history/zsh.sh
+fi
+# <END> fzf-history-widget cfg
