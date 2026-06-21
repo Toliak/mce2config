@@ -24,10 +24,46 @@ alias du1="du -dh 1"
 alias dps="docker ps"
 alias di="docker images"
 
-alias mv='mv -i'
-alias cp='cp -i'
-alias ln='ln -i'
-alias rm='rm -I --preserve-root'
+# Returns 0 (success) if busybox, 1 else
+# 0 is success!!!!!. I hate that so much
+function __is_busybox_symlink() {
+    local cmd
+    cmd="$1"
+    local cmd_path
+    cmd_path=$(command -v "$cmd" 2>/dev/null)
+
+    if [ -n "$cmd_path" ] && [ -L "$cmd_path" ] && [ "$(basename $(readlink "$cmd_path"))" = "busybox" ]; then
+        return 0
+    fi
+
+    if command "$cmd" --help 2>&1 | head -10 | grep -qi "BusyBox"; then
+        return 0
+    fi
+
+    return 1
+}
+
+__is_busybox_symlink__cached() {
+    case "${__MCE2_BUSYBOX:-unset}" in
+        "1") return 1 ;;
+        "0") return 0 ;;
+    esac
+    
+    if __is_busybox_symlink "$1"; then
+        export __MCE2_BUSYBOX=0
+        return 0
+    else
+        export __MCE2_BUSYBOX=1
+        return 1
+    fi
+}
+
+if ! __is_busybox_symlink__cached "mv"; then
+    alias mv='mv -i'
+    alias cp='cp -i'
+    alias ln='ln -i'
+    alias rm='rm -I --preserve-root'
+fi
 
 alias ports='sudo netstat -tulanp'
 
